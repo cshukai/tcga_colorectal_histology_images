@@ -82,6 +82,7 @@ for j,path in enumerate(tissuelist):
         noisyTiffs=random.sample(noisy_tiflist,edge_noise_patch_num+inner_noise_patch_num)
         homoTiffs=random.sample(homo_tiflist,totalsize-(edge_noise_patch_num+inner_noise_patch_num))
         totalTiffs=noisyTiffs+homoTiffs
+        random.shuffle(totalTiffs)
         unit=int(math.sqrt(totalsize))
         
         idices=np.reshape(range(totalsize),(unit,unit))
