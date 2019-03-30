@@ -93,5 +93,5 @@ for j,path in enumerate(tissuelist):
         finalAnn.update(ann)
         tiff.imsave(this_tissue+"_"+str(i)+'.tif',finalImg)
 
-    with open('annotation.json', 'w') as outfile:
+    with open(this_tissue+"_"+'annotation.json', 'w') as outfile:
         json.dump(finalAnn, outfile)
