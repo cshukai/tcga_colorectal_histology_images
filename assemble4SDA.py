@@ -105,7 +105,7 @@ for j,path in enumerate(tissuelist):
             this_noisy_img=cv2.imread(noisy_path,-1)
             this_noisy_tiss=noisy_path.split("/")[1]
             finalImg[x_start[k]:x_start[k]+224,y_start[k]:y_start[k]+224]=this_noisy_img
-            annotation=annotation.append({'noise_type': this_noisy_tiss, 'x':x_start[k],'y':y_start[k]}, ignore_index=True)
+            annotation=annotation.append({'noise_type': this_noisy_tiss, 'x':y_start[k],'y':x_start[k]}, ignore_index=True) # intentionally reverse x and y given behavior of cv2
         tiff.imsave(this_tissue+"_noisy"+"_"+str(i)+".tif",finalImg)
         annotation.to_csv(this_tissue+"_"+str(i)+".csv")
         
