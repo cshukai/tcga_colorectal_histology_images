@@ -32,9 +32,10 @@ img_num=100 #per class ; train one denoising autoencoder for each class
 width=2240
 height=2240
 channel=1
-train_size=80
-train_num=int(math.ceil(img_num*0.8))
+train_size=.8
+train_num=int(math.ceil(img_num*train_size))
 test_num=img_num-train_num
+
 ################################################
 
 
@@ -48,29 +49,32 @@ for i,lbl in enumerate(labels):
         this_orig_path=lbl+"/"+lbl+"_"+"orig"+"_"+str(j)+".tif"
         X_train[j]=np.reshape(cv2.imread(this_noise_path,cv2.IMREAD_GRAYSCALE)/255,(width,height,channel))
         X_orig[j]=np.reshape(cv2.imread(this_orig_path,cv2.IMREAD_GRAYSCALE)/255,(width,height,channel))
+        #X_train[j]=cv2.imread(this_noise_path,-1)/255
+        #X_orig[j]=cv2.imread(this_orig_path,-1)/255
         
     # creating denoising autoencoder model
     inputs = Input(shape = (width,height,channel))
     
-    conv1 = Conv2D(16, (3,3), activation = 'relu', padding = "SAME")(inputs)
+    conv1 = Conv2D(16, (3,3), activation = 'sigmoid', padding = "SAME")(inputs)
     pool1 = MaxPooling2D(pool_size = (2,2), strides = 2)(conv1)
-    conv2 = Conv2D(32, (3,3), activation = 'relu', padding = "SAME")(pool1)
+    conv2 = Conv2D(32, (3,3), activation = 'sigmoid', padding = "SAME")(pool1)
     pool2 = MaxPooling2D(pool_size = (2,2), strides = 2)(conv2)
-    upsampling_1 = Conv2DTranspose(32, 3, padding='same', activation='relu', strides=(2, 2))(pool2)
-    act3=Activation('relu')(upsampling_1)
-    upsampling_2 = Conv2DTranspose(16, 3, padding='same', activation='relu', strides=(2, 2))(act3)
-    outputs = Conv2DTranspose(channel, 3, padding='same', activation='relu')(upsampling_2)
+    upsampling_1 = Conv2DTranspose(32, 3, padding='same', activation='sigmoid', strides=(2, 2))(pool2)
+    act3=Activation('sigmoid')(upsampling_1)
+    upsampling_2 = Conv2DTranspose(16, 3, padding='same', activation='sigmoid', strides=(2, 2))(act3)
+    outputs = Conv2DTranspose(channel, 3, padding='same', activation='sigmoid')(upsampling_2)
     autoencoder = Model(inputs, outputs)
     m = 1
     n_epoch = 1
     autoencoder.compile(optimizer='sgd', loss='binary_crossentropy')
     autoencoder.fit(X_train,X_orig, epochs=n_epoch, batch_size=m, shuffle=True,validation_split=0.2)
     print("predicting")    
-    X_test=np.zeros(shape=(test_num,width,height,3),dtype=np.float64)
+    X_test=np.zeros(shape=(test_num,width,height,channel),dtype=np.float64)
     for r in range(test_num):
         num=train_num+r
         path=lbl+"/"+lbl+"_"+"noisy"+"_"+str(num)+".tif"
-        this_test_img=cv2.imread(path,cv2.IMREAD_GRAYSCALE)
+        this_test_img=np.reshape(cv2.imread(path,cv2.IMREAD_GRAYSCALE),(width,height,channel))
+        #this_test_img=cv2.imread(path,-1)
         X_test[r]=this_test_img
     
     decoded_imgs = autoencoder.predict(X_test,batch_size=1)
