@@ -54,11 +54,9 @@ for i,lbl in enumerate(labels):
     
     conv1 = Conv2D(16, (3,3), activation = 'relu', padding = "SAME")(inputs)
     pool1 = MaxPooling2D(pool_size = (2,2), strides = 2)(conv1)
-    act1 = Activation('relu')(pool1)
-    conv2 = Conv2D(32, (3,3), activation = 'relu', padding = "SAME")(act1)
+    conv2 = Conv2D(32, (3,3), activation = 'relu', padding = "SAME")(pool1)
     pool2 = MaxPooling2D(pool_size = (2,2), strides = 2)(conv2)
-    act2=Activation('relu')(pool2)
-    upsampling_1 = Conv2DTranspose(32, 3, padding='same', activation='relu', strides=(2, 2))(act2)
+    upsampling_1 = Conv2DTranspose(32, 3, padding='same', activation='relu', strides=(2, 2))(pool2)
     act3=Activation('relu')(upsampling_1)
     upsampling_2 = Conv2DTranspose(16, 3, padding='same', activation='relu', strides=(2, 2))(act3)
     outputs = Conv2DTranspose(channel, 3, padding='same', activation='relu')(upsampling_2)
