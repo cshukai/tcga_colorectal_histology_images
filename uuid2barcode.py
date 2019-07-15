@@ -37,8 +37,14 @@ def save2Df(rslist,urls,iterator):
         return 0 
 
 def fireBulkRequest(urls):
-    rs = (grequests.get(u) for u in urls)
-    rslist=grequests.map(rs)
+    isAllNone=True
+    while isAllNone:
+        rs = (grequests.get(u) for u in urls)
+        rslist=grequests.map(rs)
+        sleep(60)
+        indices_none = [i for i, x in enumerate(rslist) if x is  None]
+        if(len(indices_none)<len(urls)):
+            isAllNone=False
     return(rslist)
 ##########################################################
     
@@ -49,8 +55,14 @@ for i,uuid in enumerate(uuids) :
 
 iterator=0
 counter=1
+#############################################################
+
 rslist=fireBulkRequest(urls)
 sleep(30)
+    
+
+
+
 with open('/storage/htc/nih-tcga/wholeslides/coad_uuidbarcode.csv','w') as csv_file:
     failedIdx=save2Df(rslist,urls,iterator)
     while counter!=0:
