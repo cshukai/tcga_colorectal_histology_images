@@ -31,3 +31,5 @@ names(result)=label
 
 
 unique(length(intersect(result[[3]],result[[2]])))
+unique(length(intersect(result[[3]],result[[1]])))
+unique(length(intersect(result[[2]],intersect(result[[3]],result[[1]]))
