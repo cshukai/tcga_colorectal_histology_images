@@ -15,10 +15,16 @@ library("TCGAutils")
 files=dir()
 # UUID tbl -> barcod list
 result=list()
+label=NULL
 for(i in 1:length(files)){
     temp=unlist(strsplit(x=files[i],split="\\."))
-    this_type=temp[2]
+    label=c(label,temp[2])
     d=read.table(files[i],sep="\t",header=T)
-    
+    tf=NULL
+    for(j in 1:nrow(d)){
+        this_row=UUIDtoBarcode(d[j,"id"], id_type = "file_id")
+        tf=c(tf,this_row[,"cases.submitter_id"])
+    }
+    result[[i]]=tf
 }
-UUIDtoBarcode("c5354db6-6d87-46e4-8e10-d1493e7226a7", id_type = "file_id")
+names(result)=label
