@@ -28,3 +28,6 @@ for(i in 1:length(files)){
     result[[i]]=tf
 }
 names(result)=label
+
+
+unique(length(intersect(result[[3]],result[[2]])))
