@@ -21,5 +21,11 @@ test_generator = test_datagen.flow_from_directory('/storage/htc/nih-tcga/sc724/t
         batch_size=batch_size) 
 
 # training
-batch_size = 16
+
 model= VGG19(weights='imagenet')
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=2000 // batch_size,
+        epochs=15,
+        validation_data=validation_generator,
+        validation_steps=800 // batch_size)
