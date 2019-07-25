@@ -23,9 +23,14 @@ test_generator = test_datagen.flow_from_directory('/storage/htc/nih-tcga/sc724/t
 # training
 
 model= VGG19(weights='imagenet')
+model.compile(loss='categorical_crossentropy',
+              optimizer='sgd',
+              metrics=['accuracy'])
 model.fit_generator(
         train_generator,
         steps_per_epoch=2000 // batch_size,
         epochs=15,
-        validation_data=validation_generator,
+        validation_data=test_generator,
         validation_steps=800 // batch_size)
+
+model.save_weights('first_try.h5')
