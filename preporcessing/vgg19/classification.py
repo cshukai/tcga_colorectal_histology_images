@@ -20,9 +20,15 @@ test_generator = test_datagen.flow_from_directory('/storage/htc/nih-tcga/sc724/t
         target_size=(224, 224),  # all images will be resized to 150x150
         batch_size=batch_size) 
 
+
+# 1000 output vgg19 originally , need to be modified to fit 9 classes here
+model= VGG19(weights='imagenet')
+
+
 # training
 
-model= VGG19(weights='imagenet')
+
+
 model.compile(loss='categorical_crossentropy',
               optimizer='sgd',
               metrics=['accuracy'])
