@@ -3,10 +3,12 @@ from keras.applications.vgg19 import VGG19
 from keras.preprocessing import image
 from keras.applications.vgg19 import preprocess_input
 from keras.models import Model
+from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import numpy as np
+
 # config
-batch_size = 16
+batch_size = 32
 
 # input
 train_datagen = ImageDataGenerator(rescale=1./255,shear_range=0.2,zoom_range=0.2,horizontal_flip=True)
@@ -22,12 +24,10 @@ test_generator = test_datagen.flow_from_directory('/storage/htc/nih-tcga/sc724/t
 
 
 # 1000 output vgg19 originally , need to be modified to fit 9 classes here
-model= VGG19(weights='imagenet')
-model.layers.pop()
+model= VGG19(weights=None,classes=9)
 
 
 # training
-
 
 
 model.compile(loss='categorical_crossentropy',
