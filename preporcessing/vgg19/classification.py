@@ -23,6 +23,7 @@ test_generator = test_datagen.flow_from_directory('/storage/htc/nih-tcga/sc724/t
 
 # 1000 output vgg19 originally , need to be modified to fit 9 classes here
 model= VGG19(weights='imagenet')
+model.layers.pop()
 
 
 # training
