@@ -73,7 +73,7 @@ for idx,path in enumerate(all_wsi_path):
          x_end=i+crop_size+1
          y_end=j+crop_size+1
          patch=im[i:x_end,j:y_end,1:4]
-         this_out_name=out_dir+'test'+'_'+str(j)+'_'+str(i)+'.tif'
+         this_out_name=out_dir+wsi_path+'_'+str(j)+'_'+str(i)+'.tif'
          skimage.io.imsave(this_out_name,patch)
          j=j+overlap
        i=i+overlap
