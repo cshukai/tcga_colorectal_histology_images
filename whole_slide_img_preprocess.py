@@ -56,8 +56,8 @@ def img2patches(ndarr,patch_width,patch_height,nchannel,stride):
     return(out)
 
 
-in_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide'
-out_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif'
+in_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/'
+out_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/'
 wsi_path=in_dir+'TCGA-WS-AB45-01A-01-TS1.1C4317EE-8703-4C6A-B585-5940437D4AEA.svs'
 d=openslide.OpenSlide('wsi_path')
 #get high resolution pic
@@ -71,5 +71,5 @@ for i in range(height):
         for j in range(width):
            if j<width:
             this_out_name=out_dir+wsi_path+'_'+j+'_'+i+'tif'
-            skimage.io.imsave(this_out_name,patches[j,i]
+            skimage.io.imsave(this_out_name,patches[j,i])
 
