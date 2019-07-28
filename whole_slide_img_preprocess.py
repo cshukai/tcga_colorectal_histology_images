@@ -67,7 +67,7 @@ for idx,path in enumerate(all_wsi_path):
     im=d.read_region((0,0),d.level_count-1,d.level_dimensions[0])
     im2=np.array(im)
     patches=img2patches(im2,224,224,4,112)
-    width=pathches.shape[0]
+    width=patches.shape[0]
     height=patches.shape[1]
 
     for i in range(height):
