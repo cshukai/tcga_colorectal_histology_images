@@ -1,8 +1,11 @@
+import scipy.ndimage
+from skimage.util import view_as_windows
 import openslide
 from PIL import Image
 from openslide.lowlevel import *
 import numpy as np
 import cv2
+import skimage.io
 
 def _load_image(buf, size):
     # Load entire buffer at once if possible
@@ -47,15 +50,25 @@ def _load_image(buf, size):
     
 openslide.lowlevel._load_image = _load_image
 
+def img2patches(ndarr,patch_width,patch_height,nchannel,stride):
+    window_shape = (patch_width, patch_height,nchannel)
+    out=view_as_windows(ndarr,window_shape,step=stride)
+    return(out)
+
+
 
 wsi_path='TCGA-AA-A03J-11A-01-BS1.b4e0ae15-77a4-4834-9788-af6c8ab01d90.svs'
 d=openslide.OpenSlide('TCGA-AA-A03J-11A-01-BS1.b4e0ae15-77a4-4834-9788-af6c8ab01d90.svs')
 #get high resolution pic
 im=d.read_region((0,0),d.level_count-1,d.level_dimensions[0])
-#print(np.sum(im))
+patches=img2patches(im,224,224,4,112)
+width=pathces.shape[0]
+height=patches.shape[1]
 
-im.save("test.tif",dpi=(3000,3000))
-im=cv2.imread("test.tif")
-cv2.imwrite("test.png",im)
-#im2=Image.open("test.tif")
-#print(im2.info)
+for i in range(height):
+    if i<height:
+        for j in range(width):
+           if j<width:
+            this_out_name=wsi_path+'_'+j+'_'+i+'tif'
+            skimage.io.imsave(this_out_name,patches[j,i]
+
