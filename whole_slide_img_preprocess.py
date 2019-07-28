@@ -74,5 +74,5 @@ for idx,path in enumerate(all_wsi_path):
         if i<height:
             for j in range(width):
                if j<width:
-                this_out_name=out_dir+wsi_path+'_'+j+'_'+i+'tif'
+                this_out_name=out_dir+wsi_path+'_'+str(j)+'_'+str(i)+'tif'
                 skimage.io.imsave(this_out_name,patches[j,i])
