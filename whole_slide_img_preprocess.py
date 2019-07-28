@@ -65,14 +65,20 @@ for idx,path in enumerate(all_wsi_path):
     d=openslide.OpenSlide(wsi_path)
     #get high resolution pic
     im=d.read_region((0,0),d.level_count-1,d.level_dimensions[0])
-    im2=np.array(im)
-    patches=img2patches(im2,224,224,4,112)
-    width=patches.shape[0]
-    height=patches.shape[1]
-
-    for i in range(height):
-        if i<height:
-            for j in range(width):
-               if j<width:
-                this_out_name=out_dir+wsi_path+'_'+str(j)+'_'+str(i)+'tif'
-                skimage.io.imsave(this_out_name,patches[j,i])
+    im=np.array(im)
+    width=im.shape[0]
+    height=im.shape[1]
+    crop_size=224
+    overlap=112
+    for i in range(width):
+      if i < width-crop_size:
+       for j in range(height):
+        if j<height-crop_size:
+         x_end=i+crop_size+1
+         y_end=j+crop_size+1
+         patch=im[i:x_end,j:y_end,:]
+         this_out_name=out_dir+'test'+'_'+str(j)+'_'+str(i)+'.tif'
+         skimage.io.imsave(this_out_name,patch)
+         j=j+overlap
+       i=i+overlap
+    
