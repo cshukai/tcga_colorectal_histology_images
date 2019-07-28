@@ -71,16 +71,13 @@ for idx,path in enumerate(all_wsi_path):
     height=im.shape[1]
     crop_size=224
     overlap=112
-    for i in range(width):
+    for i in range(0,width,overlap):
       if i < width-crop_size:
-       for j in range(height):
+       for j in range(0,height,overlap):
         if j<height-crop_size:
          x_end=i+crop_size+1
          y_end=j+crop_size+1
-         patch=im[i:x_end,j:y_end,1:4]
+         patch=im[i:x_end,j:y_end,:]
          barcode=getBarcodeFmPath(wsi_path)
          this_out_name=out_dir+barcode+'_'+str(j)+'_'+str(i)+'.tif'
          skimage.io.imsave(this_out_name,patch)
-         j=j+overlap
-       i=i+overlap
-
