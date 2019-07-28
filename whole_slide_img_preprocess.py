@@ -62,7 +62,8 @@ wsi_path=in_dir+'TCGA-WS-AB45-01A-01-TS1.1C4317EE-8703-4C6A-B585-5940437D4AEA.sv
 d=openslide.OpenSlide(wsi_path)
 #get high resolution pic
 im=d.read_region((0,0),d.level_count-1,d.level_dimensions[0])
-patches=img2patches(im,224,224,4,112)
+img2=np.array(im)
+patches=img2patches(im2,224,224,4,112)
 width=pathces.shape[0]
 height=patches.shape[1]
 
