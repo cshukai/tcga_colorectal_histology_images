@@ -15,7 +15,7 @@ def _load_image(buf, size):
     # requirements
     PIXELS_PER_LOAD = 1 << 26
     def do_load(buf, size):
- 
+
         # First reorder the bytes in a pixel from native-endian aRGB to
         # big-endian RGBa to work around limitations in RGBa loader
         rawmode = (sys.byteorder == 'little') and 'BGRA' or 'ARGB'
@@ -48,10 +48,15 @@ def _load_image(buf, size):
             chunk = memoryview(buf)[y * w:(y + rows) * w].tobytes()
         img.paste(do_load(chunk, (w, rows)), (0, y))
     return img
-    
+
 openslide.lowlevel._load_image = _load_image
 
-
+def getBarcodeFmPath(fullpath):
+    a=fullpath.split("/")
+    b=a[len(a)-1]
+    c=b.split('.')
+    d=c[0]
+    return(d)
 
 in_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/'
 all_wsi_path=glob.glob('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/*.svs')
@@ -73,8 +78,9 @@ for idx,path in enumerate(all_wsi_path):
          x_end=i+crop_size+1
          y_end=j+crop_size+1
          patch=im[i:x_end,j:y_end,1:4]
-         this_out_name=out_dir+wsi_path+'_'+str(j)+'_'+str(i)+'.tif'
+         barcode=getBarcodeFmPath(wsi_path)
+         this_out_name=out_dir+barcode+'_'+str(j)+'_'+str(i)+'.tif'
          skimage.io.imsave(this_out_name,patch)
          j=j+overlap
        i=i+overlap
-    
+
