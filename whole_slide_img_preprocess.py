@@ -51,10 +51,6 @@ def _load_image(buf, size):
     
 openslide.lowlevel._load_image = _load_image
 
-def img2patches(ndarr,patch_width,patch_height,nchannel,stride):
-    window_shape = (patch_width, patch_height,nchannel)
-    out=view_as_windows(ndarr,window_shape,step=stride)
-    return(out)
 
 
 in_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/'
@@ -76,7 +72,7 @@ for idx,path in enumerate(all_wsi_path):
         if j<height-crop_size:
          x_end=i+crop_size+1
          y_end=j+crop_size+1
-         patch=im[i:x_end,j:y_end,:]
+         patch=im[i:x_end,j:y_end,1:4]
          this_out_name=out_dir+'test'+'_'+str(j)+'_'+str(i)+'.tif'
          skimage.io.imsave(this_out_name,patch)
          j=j+overlap
