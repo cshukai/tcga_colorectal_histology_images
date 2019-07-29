@@ -1,3 +1,4 @@
+
 import glob
 import scipy.ndimage
 from skimage.util import view_as_windows
@@ -7,6 +8,7 @@ from openslide.lowlevel import *
 import numpy as np
 import cv2
 import skimage.io
+import os
 
 def _load_image(buf, size):
     # Load entire buffer at once if possible
@@ -79,5 +81,8 @@ for idx,path in enumerate(all_wsi_path):
          y_end=j+crop_size+1
          patch=im[i:x_end,j:y_end,:]
          barcode=getBarcodeFmPath(wsi_path)
-         this_out_name=out_dir+barcode+'_'+str(j)+'_'+str(i)+'.tif'
+         folder=out_dir+barcode+'/'
+         if os.path.exists(folder)==False  :
+            os.mkdir( folder )
+         this_out_name=folder+'_'+str(j)+'_'+str(i)+'.tif'
          skimage.io.imsave(this_out_name,patch)
