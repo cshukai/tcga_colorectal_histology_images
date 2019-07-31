@@ -1,4 +1,4 @@
-
+import gc
 import glob
 import scipy.ndimage
 from skimage.util import view_as_windows
@@ -62,6 +62,14 @@ def getBarcodeFmPath(fullpath):
 
 in_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/'
 all_wsi_path=glob.glob('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/*.svs')
+
+existing_wsi= os.listdir("/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/")
+
+for wsi in all_wsi_path:
+    for ex in existing_wsi:
+        if ex in wsi:
+         all_wsi_path.remove(wsi)
+
 out_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/'
 for idx,path in enumerate(all_wsi_path):
     wsi_path=path
@@ -73,6 +81,12 @@ for idx,path in enumerate(all_wsi_path):
     height=im.shape[1]
     crop_size=224
     overlap=112
+
+    barcode=getBarcodeFmPath(wsi_path)
+    folder=out_dir+barcode+'/'
+    if os.path.exists(folder)==False:
+      os.mkdir( folder )
+
     for i in range(0,width,overlap):
       if i < width-crop_size:
        for j in range(0,height,overlap):
@@ -80,9 +94,11 @@ for idx,path in enumerate(all_wsi_path):
          x_end=i+crop_size+1
          y_end=j+crop_size+1
          patch=im[i:x_end,j:y_end,:]
-         barcode=getBarcodeFmPath(wsi_path)
-         folder=out_dir+barcode+'/'
-         if os.path.exists(folder)==False  :
-            os.mkdir( folder )
-         this_out_name=folder+'_'+str(j)+'_'+str(i)+'.tif'
+         if(np.sum(patch)==0): #black
+          continue
+         if(np.mean(patch)>240): # white
+          continue
+         this_out_name=out_dir+barcode+'/'+'_'+str(j)+'_'+str(i)+'.tif'
+
          skimage.io.imsave(this_out_name,patch)
+         gc.collect()
