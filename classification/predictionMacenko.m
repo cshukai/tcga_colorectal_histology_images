@@ -28,14 +28,14 @@ fid = fopen("predOutcome.txt", 'a');
 
 % normalize then predict by vgg 19
 allFolders=dir('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/')
-for i=1:numel(allFolders)
+for i=3:numel(allFolders)
     currFolderName = allFolders(i).name;
-    if currFolderName == '.'
-       continue
-    end 
-    if currFolderName == '..'
-       continue
-    end   
+    %if currFolderName == '.'
+    %   continue
+    %end 
+    %if currFolderName == '..'
+    %   continue
+    %end   
     currFolderName=strcat('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/',currFolderName)
     allMyFiles = dir([currFolderName]);
     
