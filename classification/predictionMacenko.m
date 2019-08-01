@@ -21,7 +21,7 @@ addpath(genpath('./subroutines/stain_normalisation_toolbox'));
 load('lastNet_TEXTURE_VGG.mat')
 ref_image_path = 'Ref.png';
 ref_image = imread(ref_image_path);
-verbose = true;
+verbose = false;
 
 % normalize then predict by vgg 19
 allFolders=dir('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/')
@@ -49,39 +49,12 @@ for i=1:numel(allFolders)
         currImage= currImage(:,:,1:3) % not sure what to do with the 4th channel 
         % normalization
         [ NormMM ] = Norm(currImage, ref_image, 'Macenko', 255, 0.15, 1, verbose);
+        NormMM=imresize(NormMM,[224,224])
+        % vgg classification
+         y=classify(myNet,NormMM) % label as categorical type
     end
 
 end
 
 
-
-% 
-testing_inputPath = '/storage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/images/wholeslide/colorectal/CRC-VAL-HE-7K/'; 
-
-%% READ TESTING IMAGES
-disp('loading TESTING images');
-testing_set = imageDatastore(testing_inputPath,'IncludeSubfolders',true,'LabelSource','foldernames');
-testing_set.ReadFcn = @readPathoImage_224; % read and resize images
-testing_tbl = countEachLabel(testing_set) %#ok
-testing_categories = testing_tbl.Label; % extract category labels (from folder name)
-disp('successfully loaded TESTING images');
-figure, imshow(preview(testing_set)); % show preview image
-%% DEPLOY
-predictedLabels = classify(myNet, testing_set);
-
-%% assess accuracy, show confusion matrix
-labels_ground = testing_set.Labels;
-labels_pred = predictedLabels;
-PerItemAccuracy = mean(labels_pred == labels_ground);
-disp(['per image accuracy is ',cnum2str(PerItemAccuracy)]);
-allgroups = cellstr(unique(labels_ground));
-conf = confusionmat(labels_ground,labels_pred);
-figure(),imagesc(conf);
-xlabel('predicted'),ylabel('known');
-set(gca,'XTickLabel',allgroups);
-set(gca,'YTickLabel',allgroups);
-axis square
-colorbar
-set(gcf,'Color','w');
-title(['classification with accuracy ',num2str(round(100*PerItemAccuracy)),'%']);
 
