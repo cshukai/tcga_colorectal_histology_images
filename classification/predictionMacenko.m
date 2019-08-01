@@ -21,7 +21,10 @@ addpath(genpath('./subroutines/stain_normalisation_toolbox'));
 load('lastNet_TEXTURE_VGG.mat')
 ref_image_path = 'Ref.png';
 ref_image = imread(ref_image_path);
+
+% configuration
 verbose = false;
+fid = fopen("predOutcome.txt", 'a');
 
 % normalize then predict by vgg 19
 allFolders=dir('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/')
@@ -51,10 +54,14 @@ for i=1:numel(allFolders)
         [ NormMM ] = Norm(currImage, ref_image, 'Macenko', 255, 0.15, 1, verbose);
         NormMM=imresize(NormMM,[224,224])
         % vgg classification
-         y=classify(myNet,NormMM) % label as categorical type
+         y=char(classify(myNet,NormMM)) % label as categorical type
+         out=strcat(currImageName,',',y,'\n')
+         fprintf(fid,out)
     end
 
 end
+fclose(fid);
+
 
 
 
