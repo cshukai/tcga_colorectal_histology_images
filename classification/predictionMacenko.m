@@ -39,14 +39,14 @@ for i=3:numel(allFolders)
     currFolderName=strcat('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/',currFolderName)
     allMyFiles = dir([currFolderName]);
     
-    for j=1:numel(allMyFiles)
+    for j=3:numel(allMyFiles)
       currImageName = allMyFiles(j).name;
-      if currImageName == '.'
-       continue
-      end 
-      if currImageName == '..'
-       continue
-      end
+      %if currImageName == '.'
+      % continue
+      %end 
+      %if currImageName == '..'
+      % continue
+      %end
         currImageName=strcat(currFolderName,'/',currImageName)
         currImage = imread(currImageName);
         currImage= currImage(:,:,1:3) % not sure what to do with the 4th channel 
