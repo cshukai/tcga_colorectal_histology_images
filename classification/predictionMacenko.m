@@ -15,10 +15,15 @@
 
 % loading dependecies and network
 clear all, close all, format compact, clc
-addpath('./subroutines/'); 
-load('lastNet_TEXTURE_VGG.mat')
+addpath(genpath('./subroutines/'));
+addpath(genpath('./subroutines/stain_normalisation_toolbox'));
 
-%input 
+load('lastNet_TEXTURE_VGG.mat')
+ref_image_path = 'Ref.png';
+ref_image = imread(ref_image_path);
+verbose = true;
+
+% normalize then predict by vgg 19
 allFolders=dir('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/')
 for i=1:numel(allFolders)
     currFolderName = allFolders(i).name;
@@ -41,12 +46,14 @@ for i=1:numel(allFolders)
       end
         currImageName=strcat(currFolderName,'/',currImageName)
         currImage = imread(currImageName);
+        currImage= currImage(:,:,1:3) % not sure what to do with the 4th channel 
+        % normalization
+        [ NormMM ] = Norm(currImage, ref_image, 'Macenko', 255, 0.15, 1, verbose);
     end
 
 end
-% normalization
-ref_image_path = 'Ref.png';
-ref_image = imread(ref_image_path);
+
+
 
 % 
 testing_inputPath = '/storage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/images/wholeslide/colorectal/CRC-VAL-HE-7K/'; 
