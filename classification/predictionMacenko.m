@@ -12,12 +12,42 @@
 % vgg19 model from the Matlab App store. Please observe that different
 % licenses may apply to these software packages.
 % 
-% the image data sets are available separately, see readme
 
 % loading dependecies and network
 clear all, close all, format compact, clc
-addpath('./subroutines/');
+addpath('./subroutines/'); 
 load('lastNet_TEXTURE_VGG.mat')
+
+%input 
+allFolders=dir('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/')
+for i=1:numel(allFolders)
+    currFolderName = allFolders(i).name;
+    if currFolderName == '.'
+       continue
+    end 
+    if currFolderName == '..'
+       continue
+    end   
+    currFolderName=strcat('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/',currFolderName)
+    allMyFiles = dir([currFolderName]);
+    
+    for j=1:numel(allMyFiles)
+      currImageName = allMyFiles(j).name;
+      if currImageName == '.'
+       continue
+      end 
+      if currImageName == '..'
+       continue
+      end
+        currImageName=strcat(currFolderName,'/',currImageName)
+        currImage = imread(currImageName);
+    end
+
+end
+% normalization
+ref_image_path = 'Ref.png';
+ref_image = imread(ref_image_path);
+
 % 
 testing_inputPath = '/storage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/images/wholeslide/colorectal/CRC-VAL-HE-7K/'; 
 
