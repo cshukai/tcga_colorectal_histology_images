@@ -24,29 +24,18 @@ ref_image = imread(ref_image_path);
 
 % configuration
 verbose = false;
-fid = fopen("predOutcome.txt", 'a');
+fid = fopen("predOutcome_hpc.txt", 'a');
 
 % normalize then predict by vgg 19
 allFolders=dir('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/')
 for i=3:numel(allFolders)
     currFolderName = allFolders(i).name;
-    %if currFolderName == '.'
-    %   continue
-    %end 
-    %if currFolderName == '..'
-    %   continue
-    %end   
     currFolderName=strcat('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/',currFolderName)
     allMyFiles = dir([currFolderName]);
     
-    for j=3:numel(allMyFiles)
+    parfor (j=3:numel(allMyFiles),30)
       currImageName = allMyFiles(j).name;
-      %if currImageName == '.'
-      % continue
-      %end 
-      %if currImageName == '..'
-      % continue
-      %end
+
         currImageName=strcat(currFolderName,'/',currImageName)
         currImage = imread(currImageName);
         currImage= currImage(:,:,1:3) % not sure what to do with the 4th channel 
