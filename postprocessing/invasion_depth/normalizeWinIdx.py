@@ -62,7 +62,9 @@ def getBarcodeFmPath(fullpath):
     return(d)
 
 all_wsi_path=glob.glob('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/*.svs')
-windowList=
+windowList=pd.read_csv('/storage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/deep-stroma-histology/predOutcome.txt')
 # group window indx based on TCGA barcode 
+windowList.columns=['filepath','tisu']
+windowList.groupby
 # convert ind to normalized distance with respect to dimension of a input whole slide image
 out_dir='/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/tif/'
