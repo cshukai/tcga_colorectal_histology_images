@@ -62,7 +62,7 @@ def getBarcodeFmPath(fullpath):
     return(d)
 
 all_wsi_path=glob.glob('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/*.svs')
-outdir='torage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/deep-stroma-histology/invasion/dim.txt'
+outdir='/storage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/deep-stroma-histology/invasion/dim.txt'
 
 
 for idx,wsi_path in enumerate(all_wsi_path):
