@@ -64,6 +64,7 @@ def getBarcodeFmPath(fullpath):
 all_wsi_path=glob.glob('/storage/htc/nih-tcga/sc724/tcga_current/coad/exp/slide/*.svs')
 outdir='/storage/htc/nih-tcga/sc724/tcga_current/whole_slide_patches/deep-stroma-histology/invasion/dim.txt'
 
+df = pd.DataFrame(columns=["barcode", "width","height"])
 
 for idx,wsi_path in enumerate(all_wsi_path):
     d=openslide.OpenSlide(wsi_path)
@@ -72,5 +73,5 @@ for idx,wsi_path in enumerate(all_wsi_path):
     width=im.shape[0]
     height=im.shape[1]
     barcode=getBarcodeFmPath(wsi_path)
-    with open(outdir, 'a') as the_file: 
-        the_file.write(barcode+','+width+','+height+','+'\n')
+    df = df.append({"barcode": barcode,"width":  width, "height":height}, ignore_index=True)
+df.to_csv(outdir)
