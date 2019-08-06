@@ -2,7 +2,7 @@ eudist<-function(x1,x2,y1,y2){
   d=sqrt((x1-x2)^2+(y1-y2)^2)
   return(d)
 }
-
+##########################slid center###################
 slide_dims=read.csv("dim.txt",header=T)
 slide_dims=slide_dims[,-1]
 slide_center=NULL
@@ -13,12 +13,17 @@ for(i in 1:nrow(slide_dims)){
 }
 
 slide_dims=rbind(slide_dims,slide_cetner)
+##########################patch depth ###################
 
 patch_list=read.csv("predOutcome.txt",header=F)
+patch_list=patch_list[-which(patch_list[,2]=="ADI"),]
+patch_list=patch_list[-which(patch_list[,2]=="BACK"),]
+patch_list=patch_list[-which(patch_list[,2]=="DEB"),]
+
 crop_size=225
 for(i in 1:nrow(patch_list)){
   temp=unlist(strsplit(x=as.character(patch_list[i,1]),split="/"))
-  locs=temp[length(temp)]
+  locs=temp[length(temp)]  
   temp2=unlist(strsplit(x=locs,split="_"))
   this_x_start=as.integer(gsub(x=temp2[3],pattern=".tif",replacement=""))
   this_y_start=as.integer(temp2[2])
