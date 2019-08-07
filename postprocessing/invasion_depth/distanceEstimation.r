@@ -32,28 +32,47 @@ for(i in 1:length(barcodes) ){
 unique(allpatient)
 
 
-##########################patch depth ###################
-
-patch_list=patch_list[-which(patch_list[,2]=="ADI"),]
-patch_list=patch_list[-which(patch_list[,2]=="BACK"),]
-patch_list=patch_list[-which(patch_list[,2]=="DEB"),]
-
+##########################invasion depth ###################
+barcode_list=unique(barcodes) 
 crop_size=225
 eu_dists=NULL
-for(i in 1:nrow(patch_list)){
-  temp=unlist(strsplit(x=as.character(patch_list[i,1]),split="/"))
-  locs=temp[length(temp)]  
-  temp2=unlist(strsplit(x=locs,split="_"))
-  this_x_start=as.integer(gsub(x=temp2[3],pattern=".tif",replacement=""))
-  this_y_start=as.integer(temp2[2])
-  this_x_end=this_x_start+crop_size
-  this_y_end=this_y_start+crop_size
-  this_patch_center_x=(this_x_start+this_x_end)/2
-  this_patch_center_y=(this_y_start+this_y_end)/2
-  this_barcode=temp[10]
-  this_slide_center_x=slide_dims[which(slide_dims[,"barcode"]==this_barcode),"this_center_width"]
-  this_slide_center_y=slide_dims[which(slide_dims[,"barcode"]==this_barcode),"this_center_height"]
-  this_distance=eudist(this_patch_center_x,this_slide_center_x,this_patch_center_y,this_slide_center_y)
-  eu_dists=c(eu_dists,this_distance)
+for(j in 1:length(barcode_list)){
+  this_patch_list=patch_list[grep(x=patch_list[,1],pattern=barcode_list[j]),]
+  xs=NULL
+  ys=NULL
+  for(i in 1:nrow(this_patch_list)){
+    temp=unlist(strsplit(x=as.character(this_patch_list[i,1]),split="/"))
+    locs=temp[length(temp)]  
+    temp2=unlist(strsplit(x=locs,split="_"))
+    this_x_start=as.integer(gsub(x=temp2[3],pattern=".tif",replacement=""))
+    this_y_start=as.integer(temp2[2])
+    this_x_end=this_x_start+crop_size
+    this_y_end=this_y_start+crop_size
+    this_patch_center_x=(this_x_start+this_x_end)/2
+    this_patch_center_y=(this_y_start+this_y_end)/2
+    xs=c(xs,this_patch_center_x)
+    ys=c(ys,this_patch_center_y)
+    
+  }
+  this_pathch_list=cbind(this_path,xs,ys)
+  this_slide_center_x=(min(xs)+max(xs))/2
+  this_slide_center_y=(min(ys)+max(ys))/2
+  
+  eudistances=NULL
+  for(k in 1:nrow(this_patch_list)){
+    temp=unlist(strsplit(x=as.character(this_patch_list[k,1]),split="/"))
+    locs=temp[length(temp)]  
+    temp2=unlist(strsplit(x=locs,split="_"))
+    this_x_start=as.integer(gsub(x=temp2[3],pattern=".tif",replacement=""))
+    this_y_start=as.integer(temp2[2])
+    this_x_end=this_x_start+crop_size
+    this_y_end=this_y_start+crop_size
+    this_patch_center_x=(this_x_start+this_x_end)/2
+    this_patch_center_y=(this_y_start+this_y_end)/2  
+    this_dist=(this_patch_center_x,this_slide_center_x,this_patch_center_y,this_slide_center_y)
+    this_row=
+  }
+  
 }
+
 patch_list=cbind(patch_list,eu_dists)
