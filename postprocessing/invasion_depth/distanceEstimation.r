@@ -56,3 +56,4 @@ for(i in 1:nrow(patch_list)){
   this_distance=eudist(this_patch_center_x,this_slide_center_x,this_patch_center_y,this_slide_center_y)
   eu_dists=c(eu_dists,this_distance)
 }
+patch_list=cbind(patch_list,eu_dists)
