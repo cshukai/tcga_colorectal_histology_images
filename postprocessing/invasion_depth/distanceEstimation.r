@@ -1,3 +1,6 @@
+library(ggplot2)
+setwd("../Downloads/")
+#####################helper function##################
 eudist<-function(x1,x2,y1,y2){
   d=sqrt((x1-x2)^2+(y1-y2)^2)
   return(d)
@@ -30,6 +33,7 @@ for(j in 1:length(barcode_list)){
   this_patch_list=patch_list[grep(x=patch_list[,1],pattern=barcode_list[j]),]
   xs=NULL
   ys=NULL
+  # get the estimated center of the whole tissue 
   for(i in 1:nrow(this_patch_list)){
     temp=unlist(strsplit(x=as.character(this_patch_list[i,1]),split="/"))
     locs=temp[length(temp)]  
@@ -47,11 +51,13 @@ for(j in 1:length(barcode_list)){
 
   left_boundary=min(xs)
   right_boundary=max(xs)
-  up_bounary=min(ys)
+  up_boundary=min(ys)
   bottom_boundary=max(ys)
   center_x=(left_boundary+right_boundary)/2
-  center_y=(up_bounary+bottom_boundary)/2
+  center_y=(up_boundary+bottom_boundary)/2
   
+  
+  #compute distance between image tile and center
   eu_dists=NULL
   for(i in 1:nrow(this_patch_list)){
     temp=unlist(strsplit(x=as.character(this_patch_list[i,1]),split="/"))
@@ -65,8 +71,17 @@ for(j in 1:length(barcode_list)){
     this_patch_center_y=(this_y_start+this_y_end)/2
     this_dist=eudist(this_patch_center_x,center_x,this_patch_center_y,center_y)
     eu_dists=c(eu_dists,this_dist)
+    
   }
   this_patch_list=cbind(this_patch_list,eu_dists)
   result=rbind(result,this_patch_list)
 }
 
+
+# depth estimation
+for(j in 1:length(barcode_list)){
+  this_patch_list=result[grep(x=result[,1],pattern=barcode_list[j]),]
+  this_patch_list=this_patch_list[union(which(this_patch_list[,2]=="MUC"),which(this_patch_list[,2]=="TUM")),]   
+  colnames(this_patch_list)=c("path","type","distance")
+  ggplot(this_patch_list , aes(x=distance, fill=factor(type))) + geom_histogram()
+}
