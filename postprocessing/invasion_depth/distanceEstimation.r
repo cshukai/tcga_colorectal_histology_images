@@ -78,7 +78,26 @@ for(j in 1:length(barcode_list)){
 }
 
 
-# depth estimation
+######################tumor depth categorization for survival analysis#################
+depth_result=NULL
+patients=unique(allpatient)
+for(i in 1:length(patients)){
+  these_patches=result[grep(x=result[,1],pattern=patients[i]),]
+  windows=seq(min(these_patches[,"eu_dists"]),max(these_patches[,"eu_dists"]),length=11)
+  tumor_patches=these_patches[which(these_patches[,2]=="TUM"),]
+  deepest=min(tumor_patches[,"eu_dists"])
+  depth=0
+  for(j in 2:length(windows)){
+     if(deepest>=windows[j]){
+       depth=depth+1
+     }
+  }
+  depth_result=rbind(depth_result,c(patients[i],depth))
+}
+
+
+
+########### depth estimation
 plot_list = list()
 for(j in 1:length(barcode_list)){
   this_patch_list=result[grep(x=result[,1],pattern=barcode_list[j]),]
